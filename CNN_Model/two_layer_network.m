@@ -1,0 +1,97 @@
+function rel_error = two_layer_network_solver()
+    % Two-layer network
+    %  In the previous assignment you implemented a two-layer neural network in
+    %  a single monolithic class. Now that you have implemented modular 
+    %  versions of the necessary layers, you will reimplement the two layer 
+    %  network using these modular implementations.
+
+    %  Open the file `cs231n/classifiers/fc_net.py` and complete the 
+    %  implementation of the `TwoLayerNet` class. This class will serve as a 
+    %  model for the other networks you will implement in this assignment, so 
+    %  read through it to make sure you understand the API. You can run the 
+    %  cell below to test your implementation.
+
+    % Solver
+    % In the previous assignment, the logic for training models was coupled to 
+    %  the models themselves. Following a more modular design, for this 
+    %  assignment we have split the logic for training models into a separate 
+    %  class.
+
+    % Open the file `cs231n/solver.py` and read through it to familiarize 
+    % yourself with the API. After doing so, use a `Solver` instance to train a 
+    % `TwoLayerNet` that achieves at least `50%`accuracy on the validation set.
+
+    N = 3; 
+    D = 5; 
+    H = 50; 
+    C = 7; 
+
+    X = randn(N, D);
+    y = randi(C, N);
+
+    std = 1e-2; 
+    reg = 0.0; 
+    [W1,b1,W2,b2] = TwoLayerNet_init(D, H, C, std, reg); 
+    
+    
+    disp('Testing initialization ... ')
+    W1_std = abs(std(W1) - std);
+    W2_std = abs(std(W2) - std);
+
+    assert(W1_std < (std / 10), 'First layer weights do not seem right')
+    assert(np.all(b1 == 0), 'First layer biases do not seem right')
+    assert(W2_std < (std / 10), 'Second layer weights do not seem right')
+    assert(np.all(b2 == 0), 'Second layer biases do not seem right')
+
+    disp('Testing test-time forward pass ... ')
+    W1 = linspace(-0.7, 0.3, D*H);
+    W1 = reshape(H,D);
+    b1 = linspace(-0.1, 0.9, H);
+    W2 = linspace(-0.3, 0.4, H*C);
+    W2 = reshape(C,H);
+    b2 = linspace(-0.9, 0.1, C);
+    X = linspace(-5.5, 4.5, N*D);
+    X = transpose(reshape(N,D));
+    scores = TwoLayerNet_loss(X,y,reg,W1,b1,W2,b2);
+    
+    correct_scores = [11.53165108,  12.2917344,   13.05181771,  13.81190102,  14.57198434, 15.33206765,  16.09215096; 
+                      12.05769098,  12.74614105,  13.43459113,  14.1230412,   14.81149128, 15.49994135,  16.18839143;
+                      12.58373087,  13.20054771,  13.81736455,  14.43418138,  15.05099822, 15.66781506,  16.2846319]; 
+                  
+    scores_diff = abs(scores - correct_scores); 
+    scores_diff = sum(scores_diff); 
+    assert (scores_diff < 1e-6, 'Problem with test-time forward pass')
+
+    disp('Testing training loss (no regularization)')
+    y = [0, 5, 1]; 
+    reg = 0.0; 
+    [loss, grads] = TwoLayerNet_loss(X, y, reg, W1, b1, W2, b2); 
+    loss; 
+    grads;
+    correct_loss = 3.4702243556; 
+    assert(abs(loss - correct_loss) < 1e-10, 'Problem with training-time loss')
+
+    reg = 1.0;
+    [loss, grads] = TwoLayerNet_loss(X, y, reg, W1, b1, W2, b2);
+    loss;
+    grads; 
+    correct_loss = 26.5948426952; 
+   
+    assert(abs(loss - correct_loss) < 1e-10, 'Problem with regularization loss')
+    
+    regs = [0.0, 0.7]; 
+    
+    for i = 1:1:length(regs)
+      disp('Running numeric gradient check with reg = ')
+      reg = regs(i); 
+      
+      [loss, grads] = TwoLayerNet_loss(X, y, reg, W1, b1, W2, b2);
+      loss; 
+      grads; 
+
+      for j = 1:1:length(grads)
+        grad_num = eval_numerical_gradient(f, model.params[name], verbose=False)
+        disp ('relative error: ') 
+      end 
+    end 
+end 
