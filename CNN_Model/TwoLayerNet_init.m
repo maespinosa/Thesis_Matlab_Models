@@ -1,4 +1,4 @@
-function [W1,b1,W2,b2] = TwoLayerNet_init(input_dim, hidden_dim, num_classes, weight_scale)
+function params = TwoLayerNet_init(input_dim, hidden_dim, num_classes, weight_scale)
 %   """
 %   A two-layer fully-connected neural network with ReLU nonlinearity and
 %   softmax loss that uses a modular layer design. We assume an input dimension
@@ -41,13 +41,15 @@ function [W1,b1,W2,b2] = TwoLayerNet_init(input_dim, hidden_dim, num_classes, we
     W1 = normrnd(0,weight_scale,input_dim,hidden_dim);
     %W1 = reshape(W1,hidden_dim,input_dim);
     W1_dim = size(W1);
-    b1 = zeros(hidden_dim,1);  
+    b1 = zeros(1,hidden_dim);  
     b1_dim = size(b1);
     W2 = normrnd(0,weight_scale,hidden_dim, num_classes);
     W2_dim = size(W2);
     %W2 = reshape(W2,num_classes, hidden_dim);
-    b2 = zeros(num_classes,1);
+    b2 = zeros(1,num_classes);
     b2_dim = size(b2);
+    
+    params = {W1, b1, W2, b2}; 
 end 
 	
 	

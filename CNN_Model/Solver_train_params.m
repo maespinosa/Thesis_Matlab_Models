@@ -2,7 +2,7 @@ function   [loss_history, train_acc_history, val_acc_history] = Solver_train_par
 %     """
 %     Run optimization to train the model.
 %     """
-    %disp('SOLVER_TRAIN EXECUTING'); 
+    disp('SOLVER_TRAIN EXECUTING'); 
     epoch = 0;
     best_val_acc = 0;
     best_params = {};
@@ -12,15 +12,15 @@ function   [loss_history, train_acc_history, val_acc_history] = Solver_train_par
 
     X_train_dim = size(X_train);
     %y_train_dim = size(y_train); 
-    
-    if(strcmp(type, 'FullyConnectedNet') == 1) y_train = y_train + 1; 
+    if(strcmp(type, 'TwoLayerNet') == 1) y_train = y_train + 1; 
+    elseif(strcmp(type, 'FullyConnectedNet') == 1) y_train = y_train + 1; 
     elseif(strcmp(type, 'ThreeLayerConvNet') == 1) y_train = y_train; 
     end 
     
     %X_val_dim = size(X_val); 
     %y_val_dim = size(y_val);
-    
-    if(strcmp(type, 'FullyConnectedNet') == 1) y_val = y_val + 1; 
+    if(strcmp(type, 'TwoLayerNet') == 1) y_val = y_val + 1; 
+    elseif(strcmp(type, 'FullyConnectedNet') == 1) y_val = y_val + 1; 
     elseif(strcmp(type, 'ThreeLayerConvNet') == 1) y_val = y_val;   
     end 
     

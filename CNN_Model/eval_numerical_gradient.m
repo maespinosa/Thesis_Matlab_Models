@@ -8,10 +8,10 @@ function [dx_num, dW1_num, db1_num, dW2_num, db2_num] = eval_numerical_gradient(
   x; 
 
   x_dim = size(x); 
-  W1_dim = size(W1)
-  b1_dim = size(b1)
-  W2_dim = size(W2)
-  b2_dim = size(b2)
+  W1_dim = size(W1);
+  b1_dim = size(b1);
+  W2_dim = size(W2);
+  b2_dim = size(b2);
   
   x_dim = size(x);
   dx_num = zeros(x_dim);  

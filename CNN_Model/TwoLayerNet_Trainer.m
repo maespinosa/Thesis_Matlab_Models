@@ -17,10 +17,10 @@ function TwoLayerNet_Trainer(X_train, y_train, X_val, y_val)
   X_train_dim_trainer = size(X_train);
   y_train_dim_trainer = size(y_train);
   
-  [W1,b1,W2,b2] = TwoLayerNet_init(3*32*32, 100, 10, 1e-3); 
+  [params] = TwoLayerNet_init(3*32*32, 100, 10, 1e-3); 
 
-  [loss_history, train_acc_history, val_acc_history]= Solver_train(X_train, y_train, X_val, y_val,10, 50, 'sgd', 1e-3, 1.0,'true', W1, b1, W2, b2);
-  
+ % [loss_history, train_acc_history, val_acc_history] = Solver_train_params(X_train, y_train, X_val, y_val, 10, 50, 'sgd', 1e-3, 1.0, 'true', W1, b1, W2, b2);
+  [loss_history, train_acc_history, val_acc_history] = Solver_train_params(X_train, y_train, X_val, y_val, 10, 50, 'sgd', 1e-3, 1.0, 'true', params,'TwoLayerNet')
   % Run this cell to visualize training loss and train / val accuracy
 
   subplot(2, 1, 1)

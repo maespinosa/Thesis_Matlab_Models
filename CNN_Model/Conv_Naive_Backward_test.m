@@ -29,15 +29,18 @@ function [dx_error, dw_error, db_error] = Conv_Naive_Backward_test()
 
     [dx_num, dw_num, db_num] = eval_numerical_gradient_array(x, w, b, dout, 1e-5, 'conv_forward_naive', conv_param, {0,0,0}); 
     dx_num_temp = dx_num(1,1,:,:); 
+    dw_num_temp = dw_num(1,1,:,:) ;
     %dx_num = dx_num(:); 
     %[out, x, w, b] = conv_forward_naive(x, w, b, pad, stride); 
     %dx, dw, db = conv_backward_naive(dout, cache)
     [dx, dw, db] = conv_backward_naive(dout, x, w, b, conv_param);
+    
+    dw_temp = dw(1,1,:,:);
 
     %# Your errors should be around 1e-9' 
     disp ('Testing conv_backward_naive function')
     dx_error = rel_error(dx, dx_num); 
-     dw_error = rel_error(dw, dw_num);
+    dw_error = rel_error(dw, dw_num);
     db_error = rel_error(db, db_num);
 
 end 

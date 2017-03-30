@@ -40,8 +40,10 @@ function [dx, dw, db] = affine_backward(dout, x, w, b)
 
     %6x5 = 6x10 * 10x5
     dx = dout*w_transposed; 
-    dx = reshape(dx,x_dim); 
-    %dx_dim = size(dx); 
+    dx = transpose(dx); 
+    dx = reshape(dx, x_dim);
+    %dx = reshape(dx,x_dim); 
+    dx_dim = size(dx); 
 
     %10x6 = 10x5 * 5x6 
 

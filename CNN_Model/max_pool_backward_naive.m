@@ -36,8 +36,8 @@ function dx = max_pool_backward_naive(dout, x, pool_param)
   PH = cell2mat(pool_param(2)); 
   stride = cell2mat(pool_param(3)); 
   
-  x_loc = ((W-F)/stride) +1; 
-  y_loc = ((H-F)/stride) +1; 
+  x_loc =((W-F)/stride) + 1; 
+  y_loc =((H-F)/stride) + 1; 
   
   [out, cache] = max_pool_forward_naive(x, pool_param); 
   out_dim = size(out); 
@@ -53,8 +53,8 @@ function dx = max_pool_backward_naive(dout, x, pool_param)
   for i = 1:1:N  % Number of images
 
     %for j = 1:1:C % RGB colors 
-        while pool_y_loc < y_loc
-            while pool_x_loc < x_loc
+        while pool_y_loc <= y_loc
+            while pool_x_loc <= x_loc
                 pool_block1 = x(i, :, y_index:y_index+PH-1,x_index:x_index + PW-1); 
                 %pool_block1_dim = size(pool_block1);
                 %out_repelem_dim = size(out_repelem(i, :, y_index:y_index+PH-1,x_index:x_index + PW-1));
@@ -102,56 +102,6 @@ function dx = max_pool_backward_naive(dout, x, pool_param)
   %out_max_pool_backward_dim = size(dx)
 end 
 
-  
-   
-%   for i = 1:1:N  % Number of images
-% 
-%     %for j = 1:1:C % RGB colors 
-%         while pool_y_loc < y_loc
-%             while pool_x_loc < x_loc
-%                 pool_block1 = x(i, 1, y_index:y_index+PH-1,x_index:x_index + PW-1); 
-%                 pool_block1(pool_block1 == out(i,1,pool_y_loc,pool_x_loc)) = 1; 
-%                 pool_block1(pool_block1 ~= 1) = 0; 
-%                 pool_block1(pool_block1 == 1) = dout(i, 1, pool_y_loc, pool_x_loc); 
-%                 
-%                 pool_block2 = x(i, 2, y_index:y_index+PH-1,x_index:x_index + PW-1); 
-%                 pool_block2(pool_block2 == out(i,2,pool_y_loc,pool_x_loc)) = 1; 
-%                 pool_block2(pool_block2 ~= 1) = 0; 
-%                 pool_block2(pool_block2 == 1) = dout(i, 2, pool_y_loc, pool_x_loc); 
-%                 
-%                 pool_block3 = x(i, 3, y_index:y_index+PH-1,x_index:x_index + PW-1); 
-%                 pool_block3(pool_block3 == out(i,3,pool_y_loc,pool_x_loc)) = 1; 
-%                 pool_block3(pool_block3 ~= 1) = 0; 
-%                 pool_block3(pool_block3 == 1) = dout(i, 3, pool_y_loc, pool_x_loc); 
-% 				
-%                 dx(i,1, y_index:y_index+PH-1, x_index:x_index + PW-1) = pool_block1; 
-%                 dx(i,2, y_index:y_index+PH-1, x_index:x_index + PW-1) = pool_block2;
-%                 dx(i,3, y_index:y_index+PH-1, x_index:x_index + PW-1) = pool_block3;
-%                 
-% 
-%                 x_index = x_index + stride; 
-% 				
-%                 pool_x_loc = pool_x_loc + 1; 
-%             end 
-%         
-% 				
-%             x_index = 1; 
-%             pool_x_loc = 1; 
-% 			
-%             y_index = y_index + stride;  
-%             pool_y_loc = pool_y_loc + 1; 		
-%         end 
-% 		
-%         y_index = 1; 
-%         x_index = 1; 
-%         pool_y_loc = 1; 
-%         pool_x_loc = 1; 
-%     end 
-%   end 
-%   
-  
-  
-  
 
  
   

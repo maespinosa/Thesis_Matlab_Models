@@ -4,8 +4,8 @@ function  [loss, grads, scores] = ThreeLayerConvNet_loss(X, y, reg, params)
 %     
 %     Input / output: Same API as TwoLayerNet in fc_net.py.
 %     """
-    disp('=====CALCULATING LOSS=====');
-    tic
+    %disp('=====CALCULATING LOSS=====');
+    %tic
     y_dim = size(y);
     x_dim = size(X);
     
@@ -40,7 +40,8 @@ function  [loss, grads, scores] = ThreeLayerConvNet_loss(X, y, reg, params)
 
 	
 	%conv - relu - 2x2 max pool - affine - relu - affine - softmax
-
+    
+    
     [Layer1_out, conv_cache, relu_x, pool_x, pool_param] = conv_relu_pool_forward(X, W1, b1, conv_param, pool_param); 
     %layer1_out_dim = size(Layer1_out);
     %layer1_out_temp = Layer1_out(1,1,:,:); 
@@ -63,8 +64,8 @@ function  [loss, grads, scores] = ThreeLayerConvNet_loss(X, y, reg, params)
 %     # for self.params[k]. Don't forget to add L2 regularization!               #
 %     ############################################################################
 
-	toc
-    disp('=====CALCULATING GRADIENTS=====');
+	%toc
+    %disp('=====CALCULATING GRADIENTS=====');
     
 	%y;
     y_dim = size(y); 

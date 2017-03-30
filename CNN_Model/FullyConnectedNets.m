@@ -1,4 +1,5 @@
 % Load the (preprocessed) CIFAR10 data.
+disp('============LOADING CIFAR-10 DATA============')
 %==========================================================================
 
 [X_train,X_val,X_test,y_train,y_val,y_test] = get_CIFAR10_data(); 
@@ -19,7 +20,7 @@
 % following:
 
 % Test the affine_forward function
-
+disp('============Testing Forward Pass of Affine Layer============')
 difference = affine_layer_test()
 %==========================================================================
 
@@ -30,7 +31,7 @@ difference = affine_layer_test()
 %  implementation using numeric gradient checking.
 % 
 % Test the affine_backward function
-
+disp('============Testing Backward Pass of Affine Layer============')
 [dx_error, dw_error, db_error] = affine_layer_backward_test()
 %==========================================================================
 
@@ -42,7 +43,7 @@ difference = affine_layer_test()
 %  following:"
 
 %  Test the relu_forward function,
-
+disp('============Testing Forward Pass of Relu Layer============')
 difference = relu_forward_test()
 %==========================================================================
 
@@ -52,7 +53,7 @@ difference = relu_forward_test()
 % Now implement the backward pass for the ReLU activation function in the 
 %  `relu_backward` function and test your implementation using numeric 
 %  gradient checking:"
- 
+disp('============Testing Backward Pass of Relu Layer============')
 dx_error = relu_backward_test()
 %==========================================================================
 
@@ -67,8 +68,8 @@ dx_error = relu_backward_test()
 %For now take a look at the `affine_relu_forward` and 
 % `affine_relu_backward` functions, and run the following to 
 % numerically gradient check the backward pass:"
-
-%[dx_error, dw_error, db_error] = sandwich_layers()
+disp('============Executing Sandwich Layers============')
+[dx_error, dw_error, db_error] = sandwich_layers()
 %==========================================================================
 
 
@@ -85,8 +86,8 @@ dx_error = relu_backward_test()
 %  model for the other networks you will implement in this assignment, so 
 %  read through it to make sure you understand the API. You can run the 
 %  cell below to test your implementation.
-
-[dW1_error, db1_error, dW2_error, db2_error] = two_layer_network_solver()
+disp('============Testing Two Layer Network============')
+[dW1_error, db1_error, dW2_error, db2_error] = two_layer_network_solver();
 %==========================================================================
 
 
@@ -95,7 +96,7 @@ dx_error = relu_backward_test()
 %==========================================================================
 % # TODO: Use a Solver instance to train a TwoLayerNet that achieves at 
 %    least 50% accuracy on the validation set.                                        
-
+disp('============Training Two Layer Network============')
 TwoLayerNet_Trainer(X_train, y_train, X_val, y_val); 
 
 
@@ -107,6 +108,8 @@ TwoLayerNet_Trainer(X_train, y_train, X_val, y_val);
 
 % For gradient checking, you should expect to see errors around 1e-6 or 
 %   less.
+
+disp('============Checking Gradients of Multilayer Network============')
 [dW1_error, db1_error, dW2_error, db2_error, dW3_error, db3_error] = MultilayerNet_Init_Loss_Grad_Check()
 
 
@@ -115,7 +118,7 @@ TwoLayerNet_Trainer(X_train, y_train, X_val, y_val);
 % hidden layer. You will need to tweak the learning rate and initialization 
 % scale, but you should be able to overfit and achieve 100% training 
 % accuracy within 20 epochs.
-
+disp('============Testing Three Layer Net with 50 images============')
 [loss_history, train_acc_history, val_acc_history] = ThreeLayerNet_50_test(X_train, y_train, X_val, y_val);
 
 
@@ -123,7 +126,7 @@ TwoLayerNet_Trainer(X_train, y_train, X_val, y_val);
 % 50 training examples. Again you will have to adjust the learning rate and 
 % weight initialization, but you should be able to achieve 100% training 
 % accuracy within 20 epochs.
-
+disp('============Testing Five Layer Net with 50 images============')
 [loss_history, train_acc_history, val_acc_history] = FiveLayerNet_50_test(X_train, y_train, X_val, y_val); 
 
 
@@ -160,12 +163,13 @@ TwoLayerNet_Trainer(X_train, y_train, X_val, y_val);
 
 %[2] Diederik Kingma and Jimmy Ba, "Adam: A Method for Stochastic 
 % Optimization", ICLR 2015.
-
+disp('============Testing RMSProp Update Rule============')
 [next_w_error, cache_error] = RMSProp_test()
+disp('============Testing Adam Update Rule============')
 [next_w_error, v_error, m_error] = Adam_test()
 
 
 % Once you have debugged your RMSProp and Adam implementations, run the 
 % following to train a pair of deep networks using these new update rules:
-
+disp('============Plotting results of Adam Update Rule============')
 adam_rmsprop_plot(X_train, y_train, X_val, y_val)

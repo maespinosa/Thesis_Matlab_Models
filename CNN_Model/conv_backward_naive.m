@@ -22,7 +22,7 @@ function [dx,dw,db] =  conv_backward_naive(dout, x, w, b, conv_param)
     %     H' = 1 + (H + 2 * pad - HH) / stride
     %     W' = 1 + (W + 2 * pad - WW) / stride
     
-    x_conv_backward_dim = size(x)
+    %x_conv_backward_dim = size(x)
 
   
     % DISPLAY THE CRITICAL DIMENSIONS 
@@ -66,12 +66,13 @@ function [dx,dw,db] =  conv_backward_naive(dout, x, w, b, conv_param)
     %w_rot180_dim = size(w_rot180); 		
 
     for i = 1:1:F
-       for j = 1:1:C
-           w_2d = zeros(w_dim(3), w_dim(4));
-           w_2d(:,:) = w(i,j,:,:); 
-           %size(w_2d);
-           w_rot180(i,j,:,:) = (rot90(w_2d, 2)); 
-       end;  
+           w_3d = zeros(w_dim(2), w_dim(3), w_dim(4));
+           w_3d = reshape(w(i,:,:,:),w_dim(2), w_dim(3), w_dim(4)); 
+           
+           w_3d = permute(w_3d,[3,2,1]); 
+           w_rot180_temp = (rot90(w_3d, 2));  
+           w_rot180_temp = permute(w_rot180_temp, [3,2,1]); 
+           w_rot180(i,:,:,:) = w_rot180_temp; 
     end; 
    
     %w_rot180(1,1,:,:)
@@ -80,19 +81,6 @@ function [dx,dw,db] =  conv_backward_naive(dout, x, w, b, conv_param)
     % RACK AND STACK WEIGHTS INTO ROW VECTORS 
     % =============================
     filter_w = zeros(HH, WW); 
-
-
-%     for ii = 1:1:F 
-%         for iii = 1:1:C 
-%             filter_w = w_rot180(ii,iii,:,:); 
-%             %filter_w_dim = size(filter_w);
-%             %filter_w = reshape(filter_w, HH*WW,1);
-%             filter_w = filter_w(1,:); 
-%             %filter_w_dim = size(filter_w);
-%             w_row(ii,(iii*HH*WW - HH*WW + 1):(iii*HH*WW)) = filter_w; 
-%         end 
-%     end 
- 
    
     w_rot180 = permute(w_rot180, [4,3,2,1]); 
     w_rot180 = reshape(w_rot180, HH*WW,C,F);
@@ -126,7 +114,6 @@ function [dx,dw,db] =  conv_backward_naive(dout, x, w, b, conv_param)
        %for ff = 1:1:F   %#NUMBER OF FILTERS
 
             % PLACE X DATA INTO PADDED MATRIX 
-            %x_pad(pad+1:x_pad_dim(1)-pad,pad+1:x_pad_dim(2)-pad) = dout(i,ff,:,:);
             
             % INITIALIZE COUNTERS
             loc_counter = 1;
@@ -142,9 +129,9 @@ function [dx,dw,db] =  conv_backward_naive(dout, x, w, b, conv_param)
                     X_block = dout_pad(k:k+WW-1,j:j+HH-1,:,i);
                     
                     X_col(loc_counter,:) = X_block(:);
-                    if i == 1 %&& vert_count == 1 && horz_count == 1
-                        X_block(:); 
-                    end 
+%                     if i == 1 %&& vert_count == 1 && horz_count == 1
+%                         X_block(:); 
+%                     end 
 
                     k = k + stride; 
                     loc_counter = loc_counter + 1 ;
@@ -166,12 +153,7 @@ function [dx,dw,db] =  conv_backward_naive(dout, x, w, b, conv_param)
 
 
             % DOT PRODUCT OF FILTER AND X DATA
-            %size(w_row(1:(HH*WW*1),:))
-            %size(X_col(:,1:HH*WW))
-            
-            
-            
-            
+
             channel1_filter1 = transpose(w_row(1:(HH*WW*1),1)) * transpose(X_col(:,1:HH*WW));
             %channel1_filter1_dim = size(channel1_filter1)
             channel1_filter1 = transpose(reshape(channel1_filter1, OH, OW));
@@ -190,21 +172,6 @@ function [dx,dw,db] =  conv_backward_naive(dout, x, w, b, conv_param)
             channel3_filter2 = transpose(w_row(HH*WW*2+1:(HH*WW*3),2)) * transpose(X_col(:,HH*WW*1+1:(HH*WW*2)));
             channel3_filter2 = transpose(reshape(channel3_filter2, OH, OW));
 %             
-%             dot1_xdim = size(dot1)
-%             %dot1 = transpose(reshape(dot1, OW, OH));
-%             %dot1_xdim = size(dot1);
-% 
-%             dot2 = transpose(w_row(HH*WW*1+1:(HH*WW*2),:)) * transpose(X_col(:,HH*WW*1+1:(HH*WW*2))); 
-%             %dot2 = transpose(reshape(dot2, OH, OW));
-%             %dot2_xdim = size(dot2);
-% 
-%             dot3 = transpose(w_row(HH*WW*2+1:(HH*WW*3),:)) * transpose(X_col(:,HH*WW*2+1:(HH*WW*3))); 
-%             %dot3 = transpose(reshape(dot3, OH, OW)); 
-%             %dot3_xdim = size(dot3);
-
-%             conv(ff,1,:,:) = dot1;
-%             conv(ff,2,:,:) = dot2;
-%             conv(ff,3,:,:) = dot3;
       
             conv(1,1,:,:) = channel1_filter1; 
             conv(2,1,:,:) = channel1_filter2; 
@@ -258,6 +225,7 @@ function [dx,dw,db] =  conv_backward_naive(dout, x, w, b, conv_param)
     W = x_dim(4);
 
     % Filter Dimensions
+    
     F = dout_dim(2);
     HH = dout_dim(3);
     WW = dout_dim(4);
@@ -270,20 +238,25 @@ function [dx,dw,db] =  conv_backward_naive(dout, x, w, b, conv_param)
     %ROTATE THE WEIGHTS
     %=======================
     dout;
-    %dout_dim = size(dout); 
+    dout_dim = size(dout);
 
     dout_rot180 = dout * 0; 
     %dout_rot180_dim = size(dout_rot180); 	
     
     for i = 1:1:N 
-       for j = 1:1:F
-           dout_dim_2d = zeros(dout_dim(3), dout_dim(4));
-           dout_dim_2d(:,:) = dout(i,j,:,:); 
-           %size(dout_dim_2d);
-            dout_rot180(i,j,:,:) = rot90(dout_dim_2d, 2); 
-       end; 
+
+           dout_dim_3d = zeros(dout_dim(2),dout_dim(3), dout_dim(4));
+           dout_dim_3d = reshape(dout(i,:,:,:),dout_dim(2),dout_dim(3), dout_dim(4)); 
+           
+           dout_dim_3d = permute(dout_dim_3d,[3,2,1]); 
+           dout_rot180_temp = (rot90(dout_dim_3d, 2));  
+           dout_rot180_temp = permute(dout_rot180_temp, [3,2,1]); 
+           dout_rot180(i,:,:,:) = dout_rot180_temp; 
+
+   
     end; 
-  
+
+   
     %dout_rot180; 
     % RACK AND STACK WEIGHTS INTO ROW VECTORS 
     % =============================
@@ -294,7 +267,7 @@ function [dx,dw,db] =  conv_backward_naive(dout, x, w, b, conv_param)
     dout_rot180 = reshape(dout_rot180, HH*WW,F,N);
     dout_row = reshape(dout_rot180, F*HH*WW, N); 
 
-    dout_row_dim = size(dout_row) ; 
+    dout_row_dim = size(dout_row);   
 
 
     % INITIALIZE COLUMN SIZE
@@ -315,6 +288,7 @@ function [dx,dw,db] =  conv_backward_naive(dout, x, w, b, conv_param)
     x_pad(pad+1:x_pad_dim(2)-pad, pad+1:x_pad_dim(1)-pad,:,:) = x; 
     
     X_block = []; 
+
     
 
     % CONVOLVE
@@ -326,12 +300,12 @@ function [dx,dw,db] =  conv_backward_naive(dout, x, w, b, conv_param)
         loc_counter = 1; 
         j = 1; 
         k = 1; 
-        horz_count = 0; 
-        vert_count = 0; 
+        horz_count = 1; 
+        vert_count = 1; 
 
         % RACK AND STACK INPUT DATA INTO COLUMNS
-        while vert_count < OH
-             while horz_count < OW
+        while vert_count <= OH
+             while horz_count <= OW
                                 %Width     Height  Channel Sample
                  X_block = x_pad(k:k+WW-1,j:j+HH-1,:,i);
 
@@ -344,7 +318,7 @@ function [dx,dw,db] =  conv_backward_naive(dout, x, w, b, conv_param)
              end; 
 
              k = 1;
-             horz_count = 0;
+             horz_count = 1;
              j = j + stride; 
              vert_count = vert_count + 1;
         end; 
@@ -358,20 +332,20 @@ function [dx,dw,db] =  conv_backward_naive(dout, x, w, b, conv_param)
         channel1_filter1 = transpose(dout_row(1:HH*WW,i)) * transpose(X_col(:, 1:HH*WW)); 
         channel1_filter1 = reshape(channel1_filter1, OH,OW); 
 
-        channel2_filter1 = transpose(dout_row(1:HH*WW,i)) * transpose(X_col(:, HH*WW*1+1:(HH*WW*2))); 
-        channel2_filter1 = reshape(channel1_filter1, OH,OW); 
+        channel2_filter1 = transpose(dout_row(1:HH*WW,i)) * transpose(X_col(:, (HH*WW)+1:(HH*WW*2))); 
+        channel2_filter1 = reshape(channel2_filter1, OH,OW); 
 
-        channel3_filter1 = transpose(dout_row(1:HH*WW,i)) * transpose(X_col(:, HH*WW*2+1:(HH*WW*3))); 
-        channel3_filter1 = reshape(channel1_filter1, OH,OW); 
+        channel3_filter1 = transpose(dout_row(1:HH*WW,i)) * transpose(X_col(:, (HH*WW*2)+1:(HH*WW*3))); 
+        channel3_filter1 = reshape(channel3_filter1, OH,OW); 
 
-        channel1_filter2 = transpose(dout_row(HH*WW*1+1:(HH*WW*2),i)) * transpose(X_col(:, 1:HH*WW)); 
-        channel1_filter2 = reshape(channel1_filter1, OH,OW); 
+        channel1_filter2 = transpose(dout_row((HH*WW)+1:(HH*WW*2),i)) * transpose(X_col(:, 1:HH*WW)); 
+        channel1_filter2 = reshape(channel1_filter2, OH,OW); 
 
-        channel2_filter2 = transpose(dout_row(HH*WW*1+1:(HH*WW*2),i)) * transpose(X_col(:, HH*WW*1+1:(HH*WW*2)));
-        channel2_filter2 = reshape(channel1_filter1, OH,OW); 
+        channel2_filter2 = transpose(dout_row((HH*WW)+1:(HH*WW*2),i)) * transpose(X_col(:, (HH*WW)+1:(HH*WW*2)));
+        channel2_filter2 = reshape(channel2_filter2, OH,OW); 
 
-        channel3_filter2 = transpose(dout_row(HH*WW*1+1:(HH*WW*2),i)) * transpose(X_col(:, HH*WW*2+1:(HH*WW*3))); 
-        channel3_filter2 = reshape(channel1_filter1, OH,OW); 
+        channel3_filter2 = transpose(dout_row((HH*WW)+1:(HH*WW*2),i)) * transpose(X_col(:, (HH*WW*2)+1:(HH*WW*3))); 
+        channel3_filter2 = reshape(channel3_filter2, OH,OW); 
 
         conv(i,1,1,:,:) = channel1_filter1;
         conv(i,1,2,:,:) = channel2_filter1;
@@ -380,12 +354,13 @@ function [dx,dw,db] =  conv_backward_naive(dout, x, w, b, conv_param)
         conv(i,2,1,:,:) = channel1_filter2;
         conv(i,2,2,:,:) = channel2_filter2;
         conv(i,2,3,:,:) = channel3_filter2;
+
+    end; 
+       conv_dim = size(conv);
             
        conv_out = sum(conv,1); 
        dw = reshape(conv_out, w_dim); 
-       %dw_dim = size(dw);   
-    end; 
-
+       dw_dim = size(conv_out);   
 
     % FIND DB
     %=============================

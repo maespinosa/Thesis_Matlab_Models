@@ -1,4 +1,4 @@
-function [loss, dW1,db1,dW2,db2, scores] = TwoLayerNet_loss(X, y, reg, W1, b1, W2, b2)
+function [loss, grads, scores] = TwoLayerNet_loss(X, y, reg, params)
 %     """
 %     Compute loss and gradient for a minibatch of data.
 % 
@@ -26,6 +26,13 @@ function [loss, dW1,db1,dW2,db2, scores] = TwoLayerNet_loss(X, y, reg, W1, b1, W
 
 	x_dim = size(X);
     x_dim_loss = x_dim;
+    
+    W1 = cell2mat(params(1)); 
+    b1 = cell2mat(params(2)); 
+    W2 = cell2mat(params(3)); 
+    b2 = cell2mat(params(4)); 
+    
+    
     W1_dim_loss = size(W1);
     b1_dim_loss = size(b1);
     W2_dim_loss = size(W2);
@@ -118,6 +125,7 @@ function [loss, dW1,db1,dW2,db2, scores] = TwoLayerNet_loss(X, y, reg, W1, b1, W
     dW2 = dW2 + reg.*W2;
     dW1 = dW1 + reg.*W1;
     
+    grads = {dW1, db1, dW2, db2}; 
 
 end 
 

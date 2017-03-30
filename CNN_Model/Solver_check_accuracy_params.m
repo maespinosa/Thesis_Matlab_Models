@@ -47,7 +47,7 @@ function acc = Solver_check_accuracy_params(X, y, num_samples, batch_size,params
       end_value = (i) * batch_size;
       X_dim = size(X);
 
-      if(strcmp(type, 'TwoLayerNet') == 1) [loss, dW1,db1,dW2,db2, scores] = TwoLayerNet_loss(X(start:end_value,:,:,:), y(start:end_value,:), 0, W1, b1, W2, b2); 
+      if(strcmp(type, 'TwoLayerNet') == 1) [loss, grads, scores] = TwoLayerNet_loss(X(start:end_value,:,:,:), y(start:end_value,:), 0, params); 
       elseif(strcmp(type,'FullyConnectedNet') == 1) [loss, grads, scores] = FullyConnectedNet_loss(X(start:end_value,:,:,:), y(start:end_value,:), params, length(params)/2, 0); 
       elseif(strcmp(type,'ThreeLayerConvNet') == 1) [loss, grads, scores] = ThreeLayerConvNet_loss(X(start:end_value,:,:,:), y(start:end_value,:), 0, params);
       end 

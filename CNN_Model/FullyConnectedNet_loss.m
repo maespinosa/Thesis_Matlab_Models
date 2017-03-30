@@ -172,6 +172,7 @@ function [loss, grads, scores] = FullyConnectedNet_loss(X, y, params, num_layers
     end 
 	
     loss = avg_data_loss + reg_loss;
+    loss = loss(1); 
 	
     % compute the gradient on scores
     dscores = P;
@@ -209,7 +210,7 @@ function [loss, grads, scores] = FullyConnectedNet_loss(X, y, params, num_layers
         [dx1,dW1,db1] = affine_relu_backward(dx2, fc_x, transpose(fc_w), fc_b, relu_x);
 		
         dW3 = dW3 + reg.*W3;
-        dW2 = dW2 + reg.*W2;
+        dW2 = dW2 + reg.*W2;    
         dW1 = dW1 + reg.*W1;
 	
         grads = {dW1, db1, dW2, db2, dW3, db3};

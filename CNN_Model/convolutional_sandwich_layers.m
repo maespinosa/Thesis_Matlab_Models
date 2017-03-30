@@ -13,7 +13,7 @@ function [dx_error, dw_error, db_error] = convolutional_sandwich_layers()
     x = permute(x, [4, 3, 2, 1]); 
     w = linspace(-1, 1, prod(w_shape)); 
     w = reshape(w, 3, 3, 3, 3); 
-    w = permute(w, [4, 3, 1,2]);
+    w = permute(w, [4, 3, 2,1]);
     b = linspace(-1, 1, 3); 
     
     dout_shape = [2, 3, 8, 8];
@@ -32,6 +32,10 @@ function [dx_error, dw_error, db_error] = convolutional_sandwich_layers()
     pool_param = {pool_height, pool_width, pool_stride}; 
 
     [out, conv_cache, relu_x, pool_x, pool_param] = conv_relu_pool_forward(x, w, b, conv_param, pool_param);
+    
+    x == cell2mat(conv_cache(1));
+    w == cell2mat(conv_cache(2)); 
+    b == cell2mat(conv_cache(3)); 
 
     [dx, dw, db] = conv_relu_pool_backward(dout, conv_cache, conv_param, relu_x, pool_x, pool_param);
 

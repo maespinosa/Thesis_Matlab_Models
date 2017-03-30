@@ -22,8 +22,7 @@ function [loss_history, train_acc_history, val_acc_history] = ThreeLayerNet_50_t
   [params, num_layers] = FullyConnectedNet_Init([100, 100], 0, 0, 0, 0, 0, weight_scale);
 
      
-  [loss_history, train_acc_history, val_acc_history]= Solver_train_params(X_train, y_train, X_val, y_val, 20, 25, 'sgd', learning_rate, 1.0,'true', params);
-  
+  [loss_history, train_acc_history, val_acc_history] = Solver_train_params(X_train, y_train, X_val, y_val, 20, 25, 'adam', learning_rate, 1.0,'true', params, 'FullyConnectedNet');
 
   plot(loss_history, '-o')
   title('Three Layer Training loss history')

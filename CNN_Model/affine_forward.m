@@ -25,7 +25,7 @@ function [out,x,w,b] = affine_forward(x, w, b)
 %b_dim_affine_forward = size(b);
 
 x_dim = size(x); 
-%w_dim = size(w); 
+w_dim = size(w);
 b_dim = size(b);
 
 x_length = length(x_dim);
@@ -45,7 +45,7 @@ w_transposed = transpose(w);
 %w_transposed_dim = size(w_transposed);
 
 xr_transposed = transpose(x_reshaped);
-%xr_transposed_dim = size(xr_transposed);
+xr_transposed_dim = size(xr_transposed);
 
 for i = 1:1:x_reshaped_dim(1)
         out(i,:) = w * xr_transposed(:,i) + transpose(b); 

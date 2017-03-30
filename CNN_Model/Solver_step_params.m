@@ -15,7 +15,9 @@ function [loss_history, params] = Solver_step_params(X_train, y_train, batch_siz
     y_batch = y_train(batch_mask,:);
 
     % Compute loss and gradient
-    if (strcmp(type, 'FullyConnectedNet') == 1)
+    if (strcmp(type, 'TwoLayerNet') == 1)
+        [loss, grads, scores] = TwoLayerNet_loss(X_batch, y_batch, 0, params);
+    elseif (strcmp(type, 'FullyConnectedNet') == 1)
         [loss, grads, scores] = FullyConnectedNet_loss(X_batch, y_batch, params, length(params)/2, 0); 
     elseif(strcmp(type, 'ThreeLayerConvNet') == 1)
         [loss, grads, scores] = ThreeLayerConvNet_loss(X_batch, y_batch, 0, params); 
@@ -24,7 +26,7 @@ function [loss_history, params] = Solver_step_params(X_train, y_train, batch_siz
     loss_history = [loss_history; loss];  
 
     % Perform a parameter update
-    for p = 1:1:length(params)
+    for p = 1:1:numel(params)
         if size(cell2mat(params(p))) ~= size(cell2mat(grads(p)))
             grads(p) = {transpose(cell2mat(grads(p)))}; 
         end 

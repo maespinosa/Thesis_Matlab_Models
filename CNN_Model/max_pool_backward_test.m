@@ -21,15 +21,15 @@ function dx_error = max_pool_backward_test()
     pool_param = {pool_height, pool_width, stride}; 
      
     [dx_num, dw_num, db_num] = eval_numerical_gradient_array(x, 0, 0, dout, 1e-5, 'max_pool_forward_naive', {0,0}, pool_param ); 
-    
+    dx_num_temp = dx_num(1,1,:,:);
     dx = max_pool_backward_naive(dout, x, pool_param); 
-    %dx(1,1,:,:)
+    dx_temp = dx(1,1,:,:);
 
     % Your error should be around 1e-12
     disp ('Testing max_pool_backward_naive function:')
-    dx_dim = size(dx)
-    dx_num_dim = size(dx_num)
+    dx_dim = size(dx);
+    dx_num_dim = size(dx_num);
     
-    dx_error = rel_error(dx, dx_num) 
+    dx_error = rel_error(dx, dx_num) ;
 
 end 

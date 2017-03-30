@@ -18,7 +18,7 @@ function [dx_error, dw_error, db_error] = sandwich_layers()
     [out, fc_x, fc_w, fc_b, relu_x] = affine_relu_forward(x, w, b); 
     [dx, dw, db] = affine_relu_backward(dout, fc_x, transpose(fc_w), fc_b, relu_x); 
       
-    [dx_num, dw_num, db_num] = eval_numerical_gradient_array(x, w, b, dout, h, 'affine_relu');
+    [dx_num, dw_num, db_num] = eval_numerical_gradient_array(x, w, b, dout, h, 'affine_relu', {0,0}, {0,0,0});
     
     disp('Testing affine_relu_forward:')
     dx_error = rel_error(dx_num, dx); 

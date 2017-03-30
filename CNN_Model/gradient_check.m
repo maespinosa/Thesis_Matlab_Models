@@ -14,7 +14,8 @@ function [dW1_rel_error, db1_rel_error, dW2_rel_error, db2_rel_error, dW3_rel_er
     %y = randint(num_classes, size=num_inputs)
     y = randi([0, 9], num_inputs,1);% randint(10, N); 
 
-    params = ThreeLayerConvNet_init(input_dim, num_filters, filter_size, hidden_dim, num_classes, weight_scale); 
+    params = ThreeLayerConvNet_init(input_dim, num_filters, filter_size, hidden_dim, num_classes, weight_scale);
+    disp('=====FINDING LOSS AND GRADS FOR THREE LAYER CONVOLUTIONAL NETWORK=====')
     [loss, grads, scores] = ThreeLayerConvNet_loss(X, y, reg, params);
 
     dW1 = cell2mat(grads(1)); 
@@ -25,7 +26,7 @@ function [dW1_rel_error, db1_rel_error, dW2_rel_error, db2_rel_error, dW3_rel_er
     db3 = cell2mat(grads(6)); 
 
     num_layers = 3; 
-
+    disp('=====NUMERICALLY EVALUATING GRADS FOR THREE LAYER CONVOLUTIONAL NETWORK=====')
     grads = eval_numerical_gradient_params(X, y, h, params, reg, num_layers, 'ThreeLayerConvNet_loss'); 
 
     dW1_num = cell2mat(grads(1)); 

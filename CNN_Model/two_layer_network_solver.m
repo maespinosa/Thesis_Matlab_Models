@@ -29,25 +29,22 @@ function [dW1_error, db1_error, dW2_error, db2_error] = two_layer_network_solver
     C = 7; 
 
     X = randn(N, D);
-    X_dim = size(X) 
+    X_dim = size(X);
     y = randi(C, N);
-    y_dim = size(y)
+    y_dim = size(y);
 
     std_dev = 1e-2; 
     reg = 0.0; 
-    [W1,b1,W2,b2] = TwoLayerNet_init(D, H, C, std_dev); 
+    params = TwoLayerNet_init(D, H, C, std_dev); 
     
-    W1;
-    
-    W1_dim = size(W1)
-    b1_dim = size(b1); 
-    W2_dim = size(W2); 
-    b2_dim = size(b2); 
-    
+    W1 = cell2mat(params(1)); 
+    b1 = cell2mat(params(2)); 
+    W2 = cell2mat(params(3));
+    b2 = cell2mat(params(4)); 
     
     disp('Testing initialization ... ')
-    W1_std = abs(std2(W1) - std_dev)
-    W2_std = abs(std2(W2) - std_dev)
+    W1_std = abs(std2(W1) - std_dev);
+    W2_std = abs(std2(W2) - std_dev);
 
     assert(W1_std < (std_dev / 10.0), 'First layer weights do not seem right')
     assert(all(b1 == 0), 'First layer biases do not seem right')
@@ -60,7 +57,7 @@ function [dW1_error, db1_error, dW2_error, db2_error] = two_layer_network_solver
     W1 = transpose(W1); 
     solver_W1_dim = size(W1);
     b1 = linspace(-0.1, 0.9, H);
-    solver_b1_dim = size(b1);
+    solver_b1_dim = size(b1)
     W2 = linspace(-0.3, 0.4, H*C);
     W2 = reshape(W2,C,H);
     W2 = transpose(W2);
@@ -68,12 +65,14 @@ function [dW1_error, db1_error, dW2_error, db2_error] = two_layer_network_solver
     b2 = linspace(-0.9, 0.1, C);
     solver_b2_dim = size(b2);
     X = linspace(-5.5, 4.5, N*D);
-    X = reshape(X,N,D)
-    [loss, dW1,db1,dW2,db2, scores] = TwoLayerNet_loss(X,y,reg,W1,b1,W2,b2); 
+    X = reshape(X,N,D);
+    
+    params = {W1, b1, W2, b2}; 
+    [loss, grads, scores] = TwoLayerNet_loss(X,y,reg,params); 
     scores
     correct_scores = [11.53165108,  12.2917344,   13.05181771,  13.81190102,  14.57198434, 15.33206765,  16.09215096; 
                       12.05769098,  12.74614105,  13.43459113,  14.1230412,   14.81149128, 15.49994135,  16.18839143;
-                      12.58373087,  13.20054771,  13.81736455,  14.43418138,  15.05099822, 15.66781506,  16.2846319]; 
+                      12.58373087,  13.20054771,  13.81736455,  14.43418138,  15.05099822, 15.66781506,  16.2846319]
                   
     scores_diff = abs(scores - correct_scores);
     scores_diff = sum(sum(scores_diff));
@@ -81,17 +80,18 @@ function [dW1_error, db1_error, dW2_error, db2_error] = two_layer_network_solver
 
     disp('Testing training loss (no regularization)')
     y = [0+1; 5+1; 1+1]; 
-    reg = 0.0; 
-    [loss, dW1,db1,dW2,db2, scores] = TwoLayerNet_loss(X, y, reg, W1, b1, W2, b2); 
+    reg = 0.0
+    [loss, grads, scores] = TwoLayerNet_loss(X, y, reg, params); 
     loss
     correct_loss = 3.4702243556
+
     assert(abs(loss - correct_loss) < 1e-10, 'Problem with training-time loss')
 
-    reg = 1.0;
-    [loss, grads] = TwoLayerNet_loss(X, y, reg, W1, b1, W2, b2);
+    reg = 1.0
+    [loss, grads, scores] = TwoLayerNet_loss(X, y, reg, params);
     loss
     correct_loss = 26.5948426952
-   
+
     assert(abs(loss - correct_loss) < 1e-10, 'Problem with regularization loss')
     
     regs = [0.0, 0.7]; 
@@ -99,25 +99,28 @@ function [dW1_error, db1_error, dW2_error, db2_error] = two_layer_network_solver
     
     for i = 1:1:length(regs)
       disp('Running numeric gradient check with reg = ')
-      reg = regs(i);
+      reg = regs(i)
       
-      [loss, dW1,db1,dW2,db2, scores] = TwoLayerNet_loss(X, y, reg, W1, b1, W2, b2);
-      loss; 
+      [loss, grads, scores] = TwoLayerNet_loss(X, y, reg, params);
+      loss
 
-      [dx_num, dW1_num, db1_num, dW2_num, db2_num] = eval_numerical_gradient(X,y,h,W1,b1,W2,b2,reg); 
+
+      [grad_nums] = eval_numerical_gradient_params(X, y, h, params, reg, 2, 'TwoLayerNet_loss'); 
       
-      size(db1_num);
-      size(db1);
+      dW1 = cell2mat(grads(1)); 
+      db1 = cell2mat(grads(2)); 
+      dW2 = cell2mat(grads(3)); 
+      db2 = cell2mat(grads(4)); 
       
-      dW1
-      db1
-      dW2
-      db2
-   
-      dW1_error = rel_error(dW1_num, dW1)
-      db1_error = rel_error(db1_num, db1)
-      dW2_error = rel_error(dW2_num, dW2)
-      db2_error = rel_error(db2_num, db2)
+      dW1_num = cell2mat(grad_nums(1)); 
+      db1_num = cell2mat(grad_nums(2)); 
+      dW2_num = cell2mat(grad_nums(3)); 
+      db2_num = cell2mat(grad_nums(4)); 
+      
+      dW1_error = rel_error(dW1_num, dW1);
+      db1_error = rel_error(db1_num, db1);
+      dW2_error = rel_error(dW2_num, dW2);
+      db2_error = rel_error(db2_num, db2);
     
     end 
 end 
