@@ -39,22 +39,22 @@ function [out, cache] = conv_forward_naive(x, w, b, conv_param)
     
     % Input Volume Dimensions
     x_forward = x(1,1,:,:); 
-    x_dim = size(x) 
+    x_dim = size(x)
     %x_conv_forward_dim = size(x)
 
-    N = x_dim(1);
-    C = x_dim(2);
-    H = x_dim(3);
-    W = x_dim(4);
+    N = x_dim(1)
+    C = x_dim(2)
+    H = x_dim(3)
+    W = x_dim(4)
     
 
     %Filter Dimensions
     w; 
-    w_dim = size(w)
+    w_dim = size(w) 
 
-    F  = w_dim(1) ;
-    HH = w_dim(3);
-    WW = w_dim(4);
+    F  = w_dim(1) 
+    HH = w_dim(3)
+    WW = w_dim(4)
 
 
     % Output Volume Dimensions
@@ -62,7 +62,7 @@ function [out, cache] = conv_forward_naive(x, w, b, conv_param)
     OW = 1 + ((W + 2 * pad - WW)/stride) ;
 
     % TAKE BLOCKS OF INPUT VOLUME AND RESHAPE 
-    X_col = zeros(OH*OW, C*HH*WW); 
+    X_col = zeros(int32(OH)*int32(OW), C*HH*WW); 
     %X_col_dim = size(X_col);
 
     w_row = zeros(F,HH*WW*C); 	
@@ -78,7 +78,7 @@ function [out, cache] = conv_forward_naive(x, w, b, conv_param)
      
     X_block = zeros(WW,HH,C); 	
 
-    out = zeros(N,F,OH,OW); 	 
+    out = zeros(N,F,int32(OH),int32(OW)); 	 
 
     filter_w = zeros(HH, WW); 	
 

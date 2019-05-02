@@ -27,3 +27,15 @@
 *.exe
 *.out
 *.app
+data_processing/archive/
+data_processing/layer7.mat
+data_processing/layer4.mat
+data_processing/layer3.mat
+data_processing/layer2.mat
+data_processing/layer1.mat
+data_processing/layer6.mat
+data_processing/layer5.mat
+data_processing/python_bins/
+data_processing/script_bins/
+data_processing/script_txts/
+data_processing/test_bins/
